@@ -47,4 +47,10 @@ if __name__ == '__main__':
     NUM_REFERRALS = 10
     referrals = generate_referrals(NUM_REFERRALS, member_names)
 
-    print(referrals[:2])
+    with open('data/member_names.txt', 'w') as f:
+        for name in member_names:
+            f.write(f"{name}\n")
+    
+    with open('data/referrals.txt', 'w') as f:
+        for referral in referrals:
+            f.write(f"{referral}\n")
