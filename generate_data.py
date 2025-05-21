@@ -7,9 +7,19 @@ from faker import Faker
 Faker.seed(42)
 random.seed(42)
 
+# ---- CONSTANTS ----
+NUM_NAMES = 10
+NUM_REFERRALS = 10
+
 def generate_names(num_names: int) -> list:
     """
     Generate a list of random names.
+
+    Args:
+        num_names - The number of names to generate
+
+    Returns:
+        list(names) - A list of random names
     """
     fake = Faker()
 
@@ -24,6 +34,13 @@ def generate_names(num_names: int) -> list:
 def generate_referrals(num_referrals: int, member_names: list) -> list:
     """
     Generate a list of random referrals.
+
+    Args:
+        num_referrals - The number of referrals to generate
+        member_names - A list of member names to use for generating referrals
+        
+    Returns:
+        list(referrals) - A list of random referrals based on the given member names
     """
     referrals = set()
 
@@ -41,10 +58,7 @@ def generate_referrals(num_referrals: int, member_names: list) -> list:
 
 if __name__ == '__main__':
 
-    NUM_NAMES = 10
     member_names = generate_names(NUM_NAMES)
-
-    NUM_REFERRALS = 10
     referrals = generate_referrals(NUM_REFERRALS, member_names)
 
     with open('data/member_names.txt', 'w') as f:
