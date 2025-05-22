@@ -10,7 +10,7 @@ random.seed(42)
 
 # ---- CONSTANTS ----
 NUM_NAMES = 75
-NUM_REFERRALS = 10000
+NUM_REFERRALS = 1000
 
 def generate_first_names(num_names: int) -> list:
     """
@@ -47,7 +47,10 @@ def generate_referrals(num_referrals: int, member_first_names: list) -> list:
     referrals = set()
 
     # Store the mapping of member names to their referrals
-    member_to_referrals = {name: [] for name in member_first_names}
+    member_to_referrals_received = {name: [] for name in member_first_names}
+    
+    # Store the mapping of member names to members they referred
+    member_to_member_referrals_given = {name: [] for name in member_first_names}
 
     # Open the set of referral templates to generate from
     with open("data/preprocess/referral_templates.json", "r") as f:
@@ -57,16 +60,30 @@ def generate_referrals(num_referrals: int, member_first_names: list) -> list:
     while len(referrals) < num_referrals:
 
         referral_template = random.choice(referral_templates)
+
+        # To who is the referral being given?
         referred_member = random.choice(member_first_names)
+        # From who is the referral being given?
+        non_referred_member = member_first_names.copy()
+        non_referred_member.remove(referred_member)
+        referring_member = random.choice(non_referred_member)
+
         referral = referral_template.format(referred_member = referred_member)
 
-        referrals.add(referral) # Sets force uniqueness!!!
+        if referral in referrals:
+            continue
 
-        if referral not in member_to_referrals[referred_member]:
-            member_to_referrals[referred_member].append(referral)
+        referrals.add(referral)
 
-    with open("data/process/member_to_referrals.json", "w") as f:
-        json.dump(member_to_referrals, f, indent = 4)
+        member_to_referrals_received[referred_member].append(referral)
+
+        member_to_member_referrals_given[referring_member].append(referred_member)
+
+    with open(f"data/process/member_to_referrals_received_{NUM_NAMES}_{NUM_REFERRALS}.json", "w") as f:
+        json.dump(member_to_referrals_received, f, indent = 4)
+
+    with open(f"data/process/member_to_member_referrals_given_{NUM_NAMES}_{NUM_REFERRALS}.json", "w") as f:
+        json.dump(member_to_member_referrals_given, f, indent = 4)
 
     return list(referrals)
 
@@ -76,11 +93,11 @@ if __name__ == '__main__':
     referrals = generate_referrals(NUM_REFERRALS, member_first_names)
 
     # Save distinct member names
-    with open('data/preprocess/member_first_names.txt', 'w') as f:
+    with open(f'data/preprocess/member_first_names_{NUM_NAMES}_{NUM_REFERRALS}.txt', 'w') as f:
         for name in member_first_names:
             f.write(f"{name}\n")
     
     # Save distinct referrals
-    with open('data/preprocess/referrals.txt', 'w') as f:
+    with open(f'data/preprocess/referrals_{NUM_NAMES}_{NUM_REFERRALS}.txt', 'w') as f:
         for referral in referrals:
             f.write(f"{referral}\n")
