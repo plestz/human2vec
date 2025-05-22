@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 
 import random
+import json
 
 from faker import Faker
 Faker.seed(42)
@@ -43,16 +44,24 @@ def generate_referrals(num_referrals: int, member_names: list) -> list:
         list(referrals) - A list of random referrals based on the given member names
     """
     referrals = set()
+    member_first_names = [name.split(" ")[0].lower() for name in member_names]
+    member_to_referrals = {name: [] for name in member_first_names}
 
     with open("data/preprocess/referral_templates.json", "r") as f:
         referral_templates = pd.read_json(f)['template'].tolist()
     
     while len(referrals) < num_referrals:
         referral_template = random.choice(referral_templates)
-        referred_member = random.choice(member_names).split(" ")[0].lower()
+        referred_member = random.choice(member_first_names)
         referral = referral_template.format(referred_member = referred_member)
 
         referrals.add(referral)
+
+        if referral not in member_to_referrals[referred_member]:
+            member_to_referrals[referred_member].append(referral)
+
+    with open("data/process/member_to_referral.json", "w") as f:
+        json.dump(member_to_referrals, f, indent = 4)
 
     return list(referrals)
 
