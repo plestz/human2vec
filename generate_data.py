@@ -9,10 +9,10 @@ Faker.seed(42)
 random.seed(42)
 
 # ---- CONSTANTS ----
-NUM_NAMES = 10
-NUM_REFERRALS = 10
+NUM_NAMES = 75
+NUM_REFERRALS = 10000
 
-def generate_names(num_names: int) -> list:
+def generate_first_names(num_names: int) -> list:
     """
     Generate a list of random names.
 
@@ -24,16 +24,16 @@ def generate_names(num_names: int) -> list:
     """
     fake = Faker()
 
-    names = set()
+    first_names = set()
 
     # Until we have the desired number of unique names, generate more
-    while len(names) < num_names:
-        name = fake.name()
-        names.add(name)
+    while len(first_names) < num_names:
+        name = fake.name().split(" ")[0].lower()
+        first_names.add(name)
 
-    return list(names)
+    return list(first_names)
 
-def generate_referrals(num_referrals: int, member_names: list) -> list:
+def generate_referrals(num_referrals: int, member_first_names: list) -> list:
     """
     Generate a list of random referrals.
 
@@ -45,9 +45,6 @@ def generate_referrals(num_referrals: int, member_names: list) -> list:
         list(referrals) - A list of random referrals based on the given member names
     """
     referrals = set()
-    
-    # Only utilize first names for informality
-    member_first_names = [name.split(" ")[0].lower() for name in member_names]
 
     # Store the mapping of member names to their referrals
     member_to_referrals = {name: [] for name in member_first_names}
@@ -75,12 +72,12 @@ def generate_referrals(num_referrals: int, member_names: list) -> list:
 
 if __name__ == '__main__':
 
-    member_names = generate_names(NUM_NAMES)
-    referrals = generate_referrals(NUM_REFERRALS, member_names)
+    member_first_names = generate_first_names(NUM_NAMES)
+    referrals = generate_referrals(NUM_REFERRALS, member_first_names)
 
     # Save distinct member names
-    with open('data/preprocess/member_names.txt', 'w') as f:
-        for name in member_names:
+    with open('data/preprocess/member_first_names.txt', 'w') as f:
+        for name in member_first_names:
             f.write(f"{name}\n")
     
     # Save distinct referrals
