@@ -10,7 +10,7 @@ random.seed(42)
 
 # ---- CONSTANTS ----
 NUM_NAMES = 75
-NUM_REFERRALS = 1000
+NUM_REFERRALS = 100
 
 def generate_first_names(num_names: int) -> list:
     """
