@@ -201,5 +201,5 @@ REFERRAL_TEMPLATES = [
 
 if __name__ == "__main__":
     templates_dict = [{'template': t} for t in REFERRAL_TEMPLATES]
-    with open("data/referral_templates.json", "w") as f:
+    with open("data/preprocess/referral_templates.json", "w") as f:
         json.dump(templates_dict, f, indent = 4)

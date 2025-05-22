@@ -44,7 +44,7 @@ def generate_referrals(num_referrals: int, member_names: list) -> list:
     """
     referrals = set()
 
-    with open("data/referral_templates.json", "r") as f:
+    with open("data/preprocess/referral_templates.json", "r") as f:
         referral_templates = pd.read_json(f)['template'].tolist()
     
     while len(referrals) < num_referrals:
@@ -61,10 +61,10 @@ if __name__ == '__main__':
     member_names = generate_names(NUM_NAMES)
     referrals = generate_referrals(NUM_REFERRALS, member_names)
 
-    with open('data/member_names.txt', 'w') as f:
+    with open('data/preprocess/member_names.txt', 'w') as f:
         for name in member_names:
             f.write(f"{name}\n")
     
-    with open('data/referrals.txt', 'w') as f:
+    with open('data/preprocess/referrals.txt', 'w') as f:
         for referral in referrals:
             f.write(f"{referral}\n")
