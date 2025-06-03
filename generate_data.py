@@ -10,7 +10,7 @@ random.seed(42)
 
 # ---- CONSTANTS ----
 NUM_NAMES = 75
-NUM_REFERRALS = 100
+NUM_REFERRALS = 10000
 
 
 # ---- GENERATE DATA ----
