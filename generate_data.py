@@ -97,10 +97,10 @@ def generate_referrals(member_first_names: list, num_referrals: int = None, no_t
         if no_template_reuse:
             referral_templates.remove(referral_template)
 
-    with open(f"data/process/member_to_referrals_received_{NUM_NAMES}N_{NUM_REFERRALS}R.json", "w") as f:
+    with open(f"data/process/member_to_referrals_received_{NUM_NAMES}N_{len(referrals)}R{"_NTR" if no_template_reuse else ""}.json", "w") as f:
         json.dump(member_to_referrals_received, f, indent = 4)
 
-    with open(f"data/process/member_to_member_referrals_given_{NUM_NAMES}N_{NUM_REFERRALS}R.json", "w") as f:
+    with open(f"data/process/member_to_member_referrals_given_{NUM_NAMES}N_{len(referrals)}R{"_NTR" if no_template_reuse else ""}.json", "w") as f:
         json.dump(member_to_member_referrals_given, f, indent = 4)
 
     return list(referrals)
@@ -110,14 +110,17 @@ def generate_referrals(member_first_names: list, num_referrals: int = None, no_t
 if __name__ == '__main__':
 
     member_first_names = generate_first_names(NUM_NAMES)
-    referrals = generate_referrals(member_first_names, NUM_REFERRALS)
+
+    ntr_flag = True # no_template_reuse flag
+
+    referrals = generate_referrals(member_first_names, no_template_reuse = ntr_flag)
 
     # Save distinct member names
-    with open(f'data/preprocess/member_first_names_{NUM_NAMES}N_{NUM_REFERRALS}R.txt', 'w') as f:
+    with open(f'data/preprocess/member_first_names_{NUM_NAMES}N_{len(referrals)}R{"_NTR" if ntr_flag else ""}.txt', 'w') as f:
         for name in member_first_names:
             f.write(f"{name}\n")
     
     # Save distinct referrals
-    with open(f'data/preprocess/referrals_{NUM_NAMES}N_{NUM_REFERRALS}R.txt', 'w') as f:
+    with open(f'data/preprocess/referrals_{NUM_NAMES}N_{len(referrals)}R{"_NTR" if ntr_flag else ""}.txt', 'w') as f:
         for referral in referrals:
             f.write(f"{referral}\n")
