@@ -31,6 +31,10 @@ def generate_first_names(num_names: int) -> list:
     # Until we have the desired number of unique names, generate more
     while len(first_names) < num_names:
         name = fake.name().split(" ")[0].lower()
+
+        if '.' in name:
+            continue
+
         first_names.add(name)
 
     return list(first_names)
